@@ -1,10 +1,9 @@
-﻿namespace Dars2
+﻿namespace Dars2;
+
+internal class Program
 {
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
+        Console.WriteLine("Hello, World!");
     }
 }
