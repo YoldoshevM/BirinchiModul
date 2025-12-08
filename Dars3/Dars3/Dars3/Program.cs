@@ -1069,25 +1069,30 @@ internal class Program
         // 33
 
 
-        Console.Write("n sonini kiriting: ");
-        int n = int.Parse(Console.ReadLine());
+        //Console.Write("n sonini kiriting: ");
+        //int n = int.Parse(Console.ReadLine());
 
-        Console.Write("k sonini kiriting: ");
-        int k = int.Parse(Console.ReadLine());
+        //Console.Write("k sonini kiriting: ");
+        //int k = int.Parse(Console.ReadLine());
 
-        var result = 1;
+        //var result = 1;
 
-        for ( int i = 1; i <= k; i++ )
-        {
-            result *= n;
-        }
+        //for ( int i = 1; i <= k; i++ )
+        //{
+        //    result *= n;
+        //}
 
-        Console.Write( " Natija : " + result);
+        //Console.Write( " Natija : " + result);
 
 
 
 
         //                 FAYL 1.3.2
+
+
+        // 1
+
+
 
 
 
