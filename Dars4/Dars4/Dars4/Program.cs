@@ -3,6 +3,7 @@ using System.Diagnostics.Metrics;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.Arm;
 using System.Threading.Channels;
 
 namespace Dars4;
@@ -824,6 +825,231 @@ internal class Program
 
 
         //Console.Write(left2(s));
+
+
+
+        // 11
+
+
+        //static string theEnd(string s , bool front)
+        //{
+
+        //    if (front)
+        //    {
+        //        return s.Substring(0, 1);
+        //    }
+        //    else
+        //    {
+        //        return s.Substring(s.Length - 1);
+        //    }
+
+
+        //}
+
+        //Console.Write( " 1 ta satr kiriting : ");
+
+        //var s = Console.ReadLine();
+
+        //Console.Write( " Front (true/false) ni kiriting : ");
+
+        //var front = bool.Parse(Console.ReadLine());
+
+
+        //Console.Write( " Natija = " + theEnd(s , front));
+
+
+        // 12
+
+
+        //static string nTwice(string s, int num)
+        //{
+
+        //    string first = s.Substring(0, num);
+        //    string second = s.Substring(s.Length - num , num);
+
+        //    return (first + second);
+
+        //}
+
+        //Console.Write(" 1 ta satr kiriting : ");
+
+        //var s = Console.ReadLine();
+
+        //Console.Write(" 1 ta son kiriting : ");
+
+        //var num = int.Parse(Console.ReadLine());
+
+
+        //Console.Write(" Natija = " + nTwice(s, num));
+
+
+        // 13
+
+
+        //static string middleThree(string s)
+        //{
+
+        //    if ( s.Length % 2 == 0 )
+        //    {
+        //        Console.Write(" Xato :  Satr toq uzulikda bolishi kerak !");
+        //    }
+
+        //    int mid = s.Length / 2;
+
+        //    return s.Substring(mid - 1, 3);
+
+        //}
+
+        //Console.Write(" toq uzunlikdagi satr kiriting : ");
+
+        //var s = Console.ReadLine();
+
+        //Console.Write( " Naitja = " + middleThree(s));
+
+
+
+        // 14
+
+
+
+
+
+
+        // 15
+
+
+        //static string lastTwo(string s)
+        //{
+
+        //    string withoutLastTwo = s.Substring( 0 , s.Length - 2 );
+        //    string secondLast = s.Substring(s.Length - 2);
+        //    string Last = s.Substring(s.Length - 1);
+
+        //    return withoutLastTwo + Last + secondLast;
+        //}
+
+        //Console.Write(" 1 ta satir kiriting :");
+
+        //var s = Console.ReadLine();
+
+        //Console.Write( " Natija = " + lastTwo(s));
+
+
+
+        // 16
+
+
+
+        //static string seeColor( string s)
+        //{
+
+        //    if ( s.Length >= 3 && s.Substring( 0 , 3 ) == "red")
+        //        return "red";
+
+        //    if (s.Length >= 4 && s.Substring(0, 4) == "blue")
+        //        return " blue";
+
+        //    return "";
+
+        //}
+
+
+        //Console.Write(" Satir kiriting : ");
+
+        //var s = Console.ReadLine();
+
+        //Console.Write(seeColor(s));
+
+
+
+        // 17
+
+
+        //static bool frontAgain(string s )
+        //{
+
+        //    if ( s.Length < 2 )
+        //    {
+        //        return false;
+        //    }
+
+
+        //    var first2 = s.Substring(0, 2);
+        //    var last2 = s.Substring(s.Length - 2 , 2);
+
+        //    return first2 == last2;
+
+        //}
+
+
+        //Console.Write(" Satir kiriting : ");
+
+        //var s = Console.ReadLine();
+
+        //Console.Write(frontAgain(s));
+
+
+        // 18
+
+
+
+
+
+
+
+
+        // 19
+
+        //static string deFront(string s)
+        //{
+
+
+        //    var result = "";
+
+        //    if ( s.Length > 0 &&  s[0] == 'a')
+        //    {
+        //        result = result + 'a';
+        //    }
+
+        //    if ( s.Length > 1 &&  s[1] == 'b')
+        //    {
+        //        result = result + 'b';
+        //    }
+
+        //    if ( s.Length > 2 )
+        //    {
+        //        result = result + s.Substring(2);
+        //    }
+
+
+        //    return result;
+
+        //}
+
+
+
+        //Console.Write(" Satir kiriting : ");
+
+        //var s = Console.ReadLine();
+
+        //Console.Write(deFront(s));
+
+
+
+
+        // 20
+
+
+        
+
+
+
+        // 21
+
+
+
+
+    
 
 
 
