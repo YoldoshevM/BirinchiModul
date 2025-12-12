@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-
-namespace Dars5;
+﻿namespace Dars5;
 
 internal class Program
 {
@@ -358,34 +356,408 @@ internal class Program
         // 11
 
 
-        List<int> nums = new List<int>();
+        //List<int> nums = new List<int>();
 
-        Console.Write("List lengthini kiriting: ");
+        //Console.Write("List lengthini kiriting: ");
 
-        int n = int.Parse(Console.ReadLine());
+        //int n = int.Parse(Console.ReadLine());
 
-        for (int i = 0; i < n; i++)
-        {
-            Console.Write("List elementini kiriting: ");
+        //for (int i = 0; i < n; i++)
+        //{
+        //    Console.Write("List elementini kiriting: ");
 
-            nums.Add(int.Parse(Console.ReadLine()));
-        }
+        //    nums.Add(int.Parse(Console.ReadLine()));
+        //}
 
 
-        bool hammasikarali = true;
+        //bool hammasikarali = true;
 
-        foreach (int num in nums)
-        {
+        //foreach (int num in nums)
+        //{
 
-            if ( num % 5 != 0 )
-            {
-                hammasikarali = false;
-                break;
-            }
+        //    if ( num % 5 != 0 )
+        //    {
+        //        hammasikarali = false;
+        //        break;
+        //    }
 
-        }
+        //}
 
-        Console.Write(hammasikarali);
+        //Console.Write(hammasikarali);
+
+
+
+
+        // 12
+
+
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write(" List lenghizini kiriting : "); 
+
+        //var n = int.Parse(Console.ReadLine());
+
+        //for ( int i = 0; i < n; i++ )
+        //{
+
+        //    Console.Write( " List elementini kiriting : "); 
+        //    nums.Add(int.Parse(Console.ReadLine()));
+
+        //}
+
+        //bool res = FirstThreeTwoDigits(nums);
+        //Console.WriteLine(res);
+
+
+        //static bool FirstThreeTwoDigits(List<int> nums)
+        //{
+
+        //    if ( nums.Count < 3 )
+        //    {
+        //        return false;
+        //    }
+
+        //    for ( int i = 0; i < 3 ; i++ )
+        //    {
+        //        if (nums[i] < 10 || nums[i] > 99 )
+        //        {
+        //            return false;
+        //        }
+        //    }  
+
+        //    return true;
+
+        //}
+
+
+
+
+        // 13
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write(" List lenghizini kiriting : "); 
+
+        //var n = int.Parse(Console.ReadLine());
+
+        //for ( int i = 0; i < n; i++ )
+        //{
+
+        //    Console.Write( " List elementini kiriting : "); 
+        //    nums.Add(int.Parse(Console.ReadLine()));
+
+        //}
+
+        //bool res = CheckList(nums);
+        //Console.WriteLine(res);
+
+
+        //static bool CheckList(List<int> nums)
+        //{
+
+        //    if ( nums[0] % 2 != 0 || nums[1] % 2 != 0 )
+        //    {
+        //        return false; 
+        //    }
+
+
+        //    var n = nums.Count;
+
+        //    if (nums[ n - 2 ] % 2 == 0 || nums[n - 1] % 2 == 0)
+        //    {
+        //        return false; 
+        //    }
+
+
+        //    return true;
+
+        //}
+
+
+        // 14
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write( " List lenghini kiriting : ");
+
+        //var n = int.Parse( Console.ReadLine() );    
+
+        //for ( int i = 0; i < n; i++ )
+        //{
+
+        //    Console.Write( " List elementlarini kiriting : ");
+        //    nums.Add(int.Parse( Console.ReadLine() ));
+
+        //}
+
+
+        //var min = nums[0];
+
+        //for ( int i = 1; i < nums.Count; i++ )
+        //{
+
+        //    if ( nums[i] < min )
+        //    {
+        //        min = nums[i];
+        //    }
+
+        //}
+
+        //Console.Write(" Eng kicik element : " + min);
+
+
+
+        // 15
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write( " List lenghini kiriting : ");
+
+        //var n = int.Parse( Console.ReadLine() );    
+
+        //for ( int i = 0; i < n; i++ )
+        //{
+
+        //    Console.Write( " List elementlarini kiriting : ");
+        //    nums.Add(int.Parse( Console.ReadLine() ));
+
+        //}
+
+
+        //var min = nums[0];
+
+        //for ( int i = 1; i < nums.Count; i++ )
+        //{
+
+        //    if ( nums[i] < min )
+        //    {
+        //        min = nums[i];
+        //    }
+
+        //}
+
+
+        //var max = nums[0];
+
+        //for ( int i = 1; i < nums.Count; i++ )
+        //{
+
+        //    if ( nums[i] > max )
+        //    {
+        //        max = nums[i];
+        //    }
+
+        //}
+
+
+        //var result = min + max; 
+
+
+
+        //Console.Write(" Eng kicik va katta elementlarni yigindisi : " + result);
+
+
+
+        // 16
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write(" List lenghini kiriting : ");
+
+        //var n = int.Parse(Console.ReadLine());
+
+        //for (int i = 0; i < n; i++)
+        //{
+
+        //    Console.Write(" List elementlarini kiriting : ");
+        //    nums.Add(int.Parse(Console.ReadLine()));
+
+        //}
+
+
+        //for (int i = 0; i < nums.Count; i++)
+        //{
+
+        //    if (nums[i] >= 10 && nums[i] <= 99)
+        //    {
+
+        //        nums[i] += 100;
+
+        //    }
+
+
+        //}
+
+
+        //Console.Write(" Yangi list : ");
+
+        //foreach (int num in nums)
+        //{
+
+        //    Console.Write( " " + num );
+
+        //}
+
+
+
+        // 17
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write(" List lenghini kiriting : ");
+
+        //var n = int.Parse(Console.ReadLine());
+
+        //for (int i = 0; i < n; i++)
+        //{
+
+        //    Console.Write(" List elementlarini kiriting : ");
+        //    nums.Add(int.Parse(Console.ReadLine()));
+
+        //}
+
+
+        //var countPosittive = 0;
+        //var countNegative = 0;
+
+
+        //foreach (int nums in nums)
+        //{
+
+        //    if ( nums > 0)
+        //    {
+        //        countPosittive++;
+        //    }
+
+        //    else if ( nums < 0)
+        //    {
+        //        countNegative++; 
+        //    }
+
+
+        //}
+
+        //Console.Write( " Musbat sonlarni soni : " + countPosittive);
+        //Console.Write( " Manfiy sonlarni soni : " + countNegative);
+
+
+
+        // 18
+
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write(" List lenghini kiriting : ");
+
+        //var n = int.Parse(Console.ReadLine());
+
+        //for (int i = 0; i < n; i++)
+        //{
+
+        //    Console.Write(" List elementlarini kiriting : ");
+        //    nums.Add(int.Parse(Console.ReadLine()));
+
+        //}
+
+
+        //var counter = 0;
+
+        //for ( int i = 0; i < nums.Count; i++)
+        //{
+
+        //    if (nums[i] < nums[0] )
+        //    {
+        //        counter++;
+        //    }
+
+        //}
+
+        //Console.Write(" 1 chi elementidan kichik bo‘lgan elementlarni miqdori : " + counter);
+
+
+        // 19
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write(" List lenghini kiriting : ");
+
+        //var n = int.Parse(Console.ReadLine());
+
+        //for (int i = 0; i < n; i++)
+        //{
+
+        //    Console.Write(" List elementlarini kiriting : ");
+        //    nums.Add(int.Parse(Console.ReadLine()));
+
+        //}
+
+        //var yigindi = 0;
+
+        //for ( int i = 0; i < nums.Count; i++)
+        //{
+
+        //    if (nums[i] > nums[nums.Count - 1] )
+        //    {
+        //        yigindi += nums[i];
+        //    }
+
+        //}
+
+        //Console.Write(" Oxirgi elementidan katta bo‘lgan elementlarni yigindisi : " + yigindi); 
+
+
+
+        // 20
+
+
+        //List<int> nums = new List<int>();
+
+        //Console.Write(" List lenghini kiriting : ");
+
+        //var n = int.Parse(Console.ReadLine());
+
+        //for (int i = 0; i < n; i++)
+        //{
+
+        //    Console.Write(" List elementlarini kiriting : ");
+        //    nums.Add(int.Parse(Console.ReadLine()));
+
+        //}
+
+
+        //bool allDivisable = true;
+
+        //foreach (var num in nums)
+        //{
+            
+        //    if (num % 4 != 0 || num % 3 != 0)
+        //    {
+
+        //        allDivisable =  false;
+        //        break;
+
+        //    }
+
+        //}
+
+        //if (allDivisable)
+        //{
+        //    Console.Write( " hello ");
+        //}
+        //else
+        //{
+        //    Console.Write( " salom ");
+        //}
+
 
     }
 }
