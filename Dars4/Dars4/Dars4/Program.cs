@@ -1,18 +1,15 @@
-﻿using System;
-using System.Diagnostics.Metrics;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics.Arm;
-using System.Threading.Channels;
+﻿using System.Globalization;
+using System.Linq.Expressions;
+using System.Security.Cryptography;
 
 namespace Dars4;
 
 internal class Program
+
 {
 
 
-                          //         FILE  1.4.0
+    //         FILE  1.4.0
 
 
 
@@ -1040,18 +1037,1048 @@ internal class Program
         // 20
 
 
-        
+        //static string WithouX(string s)
+        //{
+
+
+
+        //        if (s[0] == 'x' && s[s.Length - 1 ] == 'x')
+        //        {
+        //            return s.Substring(1, s.Length - 2);
+        //        }
+
+        //        if ( s[0] == 'x' )
+        //        {
+        //            return s.Substring(1);
+        //        }
+
+        //        if (s[s.Length - 1] == 'x')
+        //        {
+        //            return s.Substring(0, s.Length - 1);
+        //        }
+
+        //        return s;
+
+
+
+        //    }
+
+        //Console.Write(" Satir kiriting : "); 
+
+        //var s = Console.ReadLine();
+
+
+        //Console.Write(WithouX(s));
+        //}
+
+
+
 
 
 
         // 21
 
 
+        //static string WithoutDigit(string s)
+        //{
+
+        //    var res = string.Empty;
 
 
-    
+        //    for (int i = 0; i < s.Length; i++)
+        //    {
+
+        //        if (!char.IsDigit(s[i]))
+        //        {
+
+        //            res += s[i];
+
+        //        }
+
+        //    }
+        //    return res;
+
+        //}
+
+
+        //static void Main(string[] args)
+        //{
+
+        //    Console.Write(" Satir kiriting : ");
+
+        //    var s = Console.ReadLine();
+
+        //    Console.WriteLine(WithoutDigit(s));
+
+
+
+        //}
+
+
+
+
+        // 22
+
+
+        //static string WithoutIsUpper(string s1)
+        //{
+
+
+        //    var res = string.Empty;
+
+        //    for (int i = 0; i < s1.Length; i++)
+        //    {
+
+        //        if (!Char.IsUpper(s1[i]))
+        //        {
+
+        //            res += s1[i];
+
+        //        }
+
+        //    }
+
+        //    return res;
+
+        //}
+
+
+        //    Console.Write(" Satir kiriting : ");
+
+        //    var s1 = Console.ReadLine();
+
+        //    Console.Write(WithoutIsUpper(s1));
+
+
+
+        // 23
+
+
+        //static string WithoutIsLower(string s1)
+        //{
+
+
+        //    var res = string.Empty;
+
+        //    for (int i = 0; i < s1.Length; i++)
+        //    {
+
+        //        if (!Char.IsLower(s1[i]))
+        //        {
+
+        //            res += s1[i];
+
+        //        }
+
+        //    }
+
+        //    return res;
+
+        //}
+
+
+        //Console.Write(" Satir kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write(WithoutIsLower(s1));
+
+
+
+        // 24
+
+
+        //static string WithoutChar(string s1)
+        //{
+
+
+        //    var res = string.Empty;
+
+        //    for (int i = 0; i < s1.Length; i++)
+        //    {
+
+        //        if ( s1[i] != '@')
+        //        {
+
+        //            res += s1[i];
+
+        //        }
+
+        //    }
+
+        //    return res;
+
+        //}
+
+
+        //Console.Write(" Satir kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write(WithoutChar(s1));
+
+
+        // 25
+
+        //static string WithoutChar(string s1)
+        //{
+
+
+        //    var res = string.Empty;
+
+        //    for (int i = 0; i < s1.Length; i++)
+        //    {
+
+        //        if (s1[i] != ' ')
+        //        {
+
+        //            res += s1[i];
+
+        //        }
+
+        //    }
+
+        //    return res;
+
+        //}
+
+
+        //Console.Write(" Satir kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write(WithoutChar(s1));
+
+
+
+        //         FILE  1.4.2
+
+
+
+        // 1
+
+
+
+        //static string CreateString( int n1 , int n2 , string s1  , string s2 )
+        //{
+
+        //    if ( n1 > s1.Length )
+        //    {
+        //        n1 = s1.Length;
+        //    }
+
+        //    if ( n2 > s2.Length )
+        //    {
+        //        n2 = s2.Length;
+        //    }
+
+
+
+
+        //    var part1 = s1.Substring(0, n1);
+        //    var part2 = s2.Substring( s2.Length - n2 , n2);
+
+        //    return part1 + part2;
+        //}
+
+
+
+        //Console.Write( " 1 chi satirni kiriting : ");
+
+        //var s1  = Console.ReadLine();
+
+        //Console.Write( " 2 chi satirni kiriting : ");
+
+        //var s2  = Console.ReadLine();
+
+
+        //Console.Write( " 1 chi int ni kiriting : "); 
+
+        //var n1 = int.Parse(Console.ReadLine());
+
+
+        //Console.Write( " 2 chi int ni kiriting : ");
+
+        //var n2 = int.Parse(Console.ReadLine());
+
+
+
+        //Console.Write(CreateString(n1, n2, s1, s2));    
+
+
+
+
+        // 2
+
+
+
+        //static string DoubleChar(string s , char c )
+        //{
+
+        //    var result = string.Empty;
+
+        //    for ( int i = 0; i < s.Length; i++ )
+        //    {
+
+        //        if (s[i] == c )
+        //        {
+        //            result += c.ToString() + c.ToString();
+        //        }
+        //        else
+        //        {
+        //            result += s[i];
+        //        }
+
+        //    }
+
+        //    return result;
+        //}
+
+        //Console.Write( " 1 ta belgi kiriting : ");
+
+        //var c = char.Parse(Console.ReadLine());
+
+
+        //Console.Write( " Satir kiriting : "); 
+
+        //var s = Console.ReadLine();
+
+
+        //Console.Write(" Natija : " + DoubleChar(s,c));
+
+
+        // 3
+
+
+
+        //static string InsertBeforeChar(string s1, string s2, char c)
+        //{
+
+        //    var result = string.Empty;
+
+
+        //    for (int i = 0; i < s1.Length; i++)
+        //    {
+
+        //        if (s1[i] == c)
+        //        {
+
+        //            result += s2;
+        //            result += c;
+
+        //        }
+
+        //        else
+        //        {
+        //            result += s1;
+        //        }
+
+        //    }
+        //    return result;
+        //}
+
+
+        //Console.Write(" C belgini kiriting : ");
+
+        //var c = char.Parse(Console.ReadLine());
+
+        //Console.Write(" s1 satirini kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write(" s2 satirini kiriting : ");
+
+        //var s2 = Console.ReadLine();
+
+
+        //Console.Write(" Natija : " + InsertBeforeChar(s1, s2, c));
+
+
+
+        // 4
+
+
+        //static string InsertBeforeChar(string s1, string s2, char c)
+        //{
+
+        //    var result = string.Empty;
+
+
+        //    for (int i = 0; i < s1.Length; i++)
+        //    {
+
+        //        result += s1[i];
+
+        //        if (s1[i] == c)
+        //        {
+
+        //            result += s2;
+
+        //        }
+
+        //        else
+        //        {
+        //            result += s1;
+        //        }
+
+        //    }
+        //    return result;
+        //}
+
+
+        //Console.Write(" C belgini kiriting : ");
+
+        //var c = char.Parse(Console.ReadLine());
+
+        //Console.Write(" s1 satirini kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write(" s2 satirini kiriting : ");
+
+        //var s2 = Console.ReadLine();
+
+
+        //Console.Write(" Natija : " + InsertBeforeChar(s1, s2, c));
+
+
+
+        // 5
+
+
+        //static int CountS2 ( string s1 , string s2 )
+        //{
+
+
+        //    var counterS2 = 0;
+
+
+        //    for( int i = 0; i < s1.Length - s2.Length; i++ )
+        //    {
+
+        //        if ( s1.Substring( i , s2.Length) == s2)
+        //        {
+        //            counterS2++;
+        //        }
+
+
+        //    }
+
+        //    return counterS2;
+        //}
+
+        //Console.Write("S1 satrini kiriting: ");
+        //string s1 = Console.ReadLine();
+
+        //Console.Write("S2 satrini kiriting: ");
+        //string s2 = Console.ReadLine();
+
+
+        //Console.Write( " Natija : " + CountS2(s1 ,s2));   
+
+
+
+        // 6
+
+
+
+        //static string RemoveFirstS2( string s1 , string s2 )
+        //{
+
+
+        //    int index = s1.IndexOf(s2);
+
+
+        //    if ( index == -1 )
+        //    {
+        //        return s1;
+
+        //    }
+
+
+
+        //    return s1.Remove(index , s2.Length );
+
+        //}
+
+        //Console.Write( " 1 satirni kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write( " 2 satirni kiriting : ");
+
+        //var s2 = Console.ReadLine();
+
+
+        //Console.Write(" Natija : " + RemoveFirstS2(s1 ,s2));
+
+
+
+
+        // 7
+
+
+        //static string ResmoveLastS2 ( string s1 , string s2 )
+        //{
+
+        //    var index = s1.LastIndexOf(s2);
+
+
+        //    if ( index == -1 )
+        //    {
+        //        return s1;
+        //    }
+
+
+        //    return s1.Remove(index, s2.Length);
+
+        //}
+
+
+        //Console.Write( " 1 chi strni kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+
+        //Console.Write( " 2 chi strni kiriting : ");
+
+        //var s2 = Console.ReadLine();
+
+        //Console.Write( " Natija  : " + ResmoveLastS2( s1 , s2 ));
+
+
+
+
+
+        // 8
+
+
+
+        //static string RemoveAllS2(string s1 , string s2 )
+        //{
+
+
+        //    return s1.Replace(s2, "");
+
+        //}
+
+        //Console.Write(" 1 chi satirni kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write(" 2 chi satirni kiriting : ");
+
+        //var s2 = Console.ReadLine();
+
+
+        //Console.Write( " Natija : " + RemoveAllS2( s1 ,s2 ));
+
+
+
+        // 9
+
+
+        //static string ReplaceFirstS2 ( string s1 , string s2 , string s3 )
+        //{
+
+
+        //    var index = s1.IndexOf(s2);
+
+
+        //    if ( index == -1 )
+        //    {
+        //        return s1;
+        //    }
+
+
+
+        //    s1 = s1.Remove(index, s2.Length);
+        //    s1 = s1.Insert(index, s3);
+
+
+        //    return s1;
+
+
+        //}
+
+
+        // 10
+
+        
+        //static string RemoveLastS2( string s1 , string s2 , string s3 )
+        //{
+
+
+        //    var index = s1.LastIndexOf(s2);
+
+
+        //    if ( index == -1 )
+        //    {
+        //        return s1;
+        //    }
+
+
+        //    s1 = s1.Remove(index , s2.Length);
+        //    s1 = s1.Insert(index, s3);
+
+
+
+        //}
+
+        //Console.Write(" 1 chi satirni kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write(" 2 chi satirni kiriting : ");
+
+        //var s2 = Console.ReadLine();
+
+        //Console.Write(" 3 chi satirni kiriting : ");
+
+        //var s3 = Console.ReadLine();
+
+
+        //Console.Write( " Natija = " + RemoveLastS2( s1 , s2  , s3 ));
+
+
+
+        // 11
+
+
+        //static string ReplaceS2ToS3(string s1 , string s2 , string s3 )
+        //{
+
+
+        //    var index = s1.IndexOf(s2);
+
+            
+        //    return s1.Replace(s2, s3);
+
+
+
+
+        //}
+
+        //Console.Write(" 1 chi satirni kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write(" 2 chi satirni kiriting : ");
+
+        //var s2 = Console.ReadLine();
+
+        //Console.Write(" 3 chi satirni kiriting : ");
+
+        //var s3 = Console.ReadLine();
+
+
+        //Console.Write(" Natija = " + ReplaceS2ToS3(s1, s2, s3));
+
+
+
+        // 12
+
+
+        //static string BetweenSpaces(string s)
+        //{
+
+        //    var fistSpace = s.IndexOf(" ");
+        //    var secondSpace = s.IndexOf(" " , fistSpace + 1);
+
+
+        //    if (secondSpace == -1)
+        //    {
+        //        return "";
+        //    }
+
+        //    return s.Substring(fistSpace + 1 , secondSpace - fistSpace - 1);
+
+
+        //}
+
+        //Console.Write( " 1 strni kiriting : ");
+
+        //var s = Console.ReadLine();
+
+        //Console.Write( " Natija : " + BetweenSpaces(s));
+
+
+
+        // 13
+
+
+        //static bool catDog ( string s1)
+        //{
+
+        //    var catCount = 0;
+        //    var dogCount = 0;
+
+
+        //    for ( int i = 0; i <= s1.Length - 3; i++ )
+        //    {
+
+        //        if (s1[i] == 'c' && s1[i+1] == 'a' && s1[i+2] == 't')
+        //        {
+        //            catCount++;
+        //        }
+
+        //        if (s1[i] == 'd' && s1[i + 1] == 'o' && s1[i + 2] == 'g')
+        //        {
+        //            dogCount++;
+        //        }
+
+        //    }
+
+        //    bool teng = (catCount == dogCount); 
+
+        //    return teng;
+
+        //}
+
+        //Console.Write( " strni kiriting : ");
+
+        //var s1 = Console.ReadLine();
+
+        //Console.Write( " Natija = " + catDog(s1));
+
+
+
+        // 14
+
+
+
+
+
+        // 15
+
+
+
+        //static bool EndOther( string a , string b )
+        //{
+
+
+        //    a = a.ToUpper();
+        //    b = b.ToUpper();
+
+        //    return a.EndsWith( b );
+
+
+        //}
+
+        //Console.WriteLine(EndOther("Hiabc", "abc"));  // true
+        //Console.WriteLine(EndOther("abc", "Hiabc"));  // false
+
+
+
+
+
+        // 17
+
+
+
+        //static string MixString( string a , string b )
+        //{
+
+        //    var res = string.Empty;
+
+        //    var minLength = Math.Min( a.Length, b.Length );
+
+
+        //    for ( int i = 0; i < minLength; i++ )
+        //    {
+
+        //        res += a[i];
+        //        res += b[i];
+
+        //    }
+
+        //    if ( a.Length > minLength )
+        //    {
+        //        res += b.Substring(minLength);
+        //    }
+
+        //    if ( b.Length > minLength )
+        //    {
+        //        res += b.Substring(minLength);
+        //    }
+
+        //    return res;
+
+        //}
+
+
+        //Console.WriteLine(MixString("abc", "xyz"));     // axbycz
+        //Console.WriteLine(MixString("Hi", "There"));   // HTihere
+        //Console.WriteLine(MixString("xxxx", "There")); // xTxhxexre
+
+
+
+        // 18
+
+
+
+        //static string RepeatEnd ( string s , int n )
+        //{
+
+        //    var res = string.Empty;
+
+
+        //    var endPart = s.Substring ( s.Length - n );
+
+
+
+        //    for ( int i = 0; i < n; i++ )
+        //    {
+
+        //        res += endPart;
+
+        //    }
+                
+        //    return res;
+
+        //}
+
+        //Console.WriteLine(RepeatEnd("Hello", 3)); // llollollo
+        //Console.WriteLine(RepeatEnd("Hello", 2)); // lolo
+        //Console.WriteLine(RepeatEnd("Hello", 1)); // o
+
+
+
+        // 19
+
+
+        //static string repeatFront( string s , int n )
+        //{
+
+        //    var res = string.Empty;
+
+        //    for ( int i = n; i > 0; i-- )
+        //    {
+
+        //        res += s.Substring(0, i);
+
+        //    }
+        //    return res;
+
+        //}
+
+        //Console.WriteLine(repeatFront("Chocolate" , 4));
+        //Console.WriteLine(repeatFront("Chocolate" , 3));
+
+
+
+        // 20
+
+
+        //static string RepeatSeparator ( string word , string sep , int n )
+        //{
+
+        //    var res = string.Empty;
+
+
+        //    for ( int i = 0; i < n; i++ )
+        //    {
+
+        //        res += word;
+
+        //        if ( i < n - 1 )
+        //        {
+        //            res += sep;
+        //        }
+
+        //    }
+
+        //    return res;
+
+        //}
+
+        //Console.WriteLine(RepeatSeparator("Word", "X", 3));  // WordXWordXWord
+        //Console.WriteLine(RepeatSeparator("This", "And", 2)); // ThisAndThis
+        //Console.WriteLine(RepeatSeparator("This", "And", 1)); // This
+
+
+
+        // 21
+
+
+        //static bool PrefixAgain(string s , int n )
+        //{
+
+        //    var firtN = s.Substring(0 , n);
+        //    var QoganQism = s.Substring(n);
+
+
+        //    return QoganQism.Contains(firtN);
+
+        //}
+        //Console.WriteLine(PrefixAgain("abXYabc", 1)); // true
+        //Console.WriteLine(PrefixAgain("abXYabc", 2)); // true
+        //Console.WriteLine(PrefixAgain("abXYabc", 3)); // false
+
+
+
+        // 22
+
+
+        //static bool XyzMiddle ( string s )
+        //{
+
+
+        //    var len = s.Length;
+        //    var xyzlen = 3;
+
+
+        //    for ( var i = 0; i <= len - xyzlen; i++ )
+        //    {
+
+        //        if ( s.Substring( i , xyzlen) == "xyz")
+        //         {
+
+        //            var left = i;
+
+        //            var right = len - ( i + xyzlen );
+
+
+        //            if ( Math.Abs(left - right) <= 1)
+        //            {
+        //                return true;
+        //            }
+
+
+        //        }
+
+        //    }
+        //        return false;
+
+        //}
+
+        //Console.WriteLine(XyzMiddle("AAxyzBB")); // true
+        //Console.WriteLine(XyzMiddle("AxyzBB"));  // true
+        //Console.WriteLine(XyzMiddle("AxyzBBB")); // false
+
+
+
+        // 23
+
+
+        //static string GetSandwich(string s)
+        //{
+
+        //    var bread = "bread";
+
+        //    var first = s.IndexOf(bread);
+        //    var last = s.LastIndexOf(bread);
+
+
+        //    if (first == -1 || first == last)
+        //    {
+
+        //        return "";
+
+        //    }
+
+        //    var start = first + bread.Length; 
+        //    var length = last - start; 
+
+        //    return s.Substring(start, length);
+
+
+        //}
+
+        //Console.WriteLine(GetSandwich("breadjambread"));      // "jam"
+        //Console.WriteLine(GetSandwich("xxbreadjambreadyy"));  // "jam"
+        //Console.WriteLine(GetSandwich("xxbreadyy"));          // ""
+
+
+
+        // 24
+
+
+        //static bool SameStarChar( string s )
+        //{
+
+        //    for ( int i = 1; i < s.Length - 1; i++ ) 
+        //    {
+
+        //        if( s[i] == '*' )
+        //        {
+        //            if( s[i - 1] != s[i + 1] )
+        //            {
+        //                return false;
+        //            }
+        //        }
+
+
+        //    }
+
+        //    return true;
+
+        //}
+
+        //Console.WriteLine(SameStarChar("xy*yzz"));  // true
+        //Console.WriteLine(SameStarChar("xy*zzz"));  // false
+        //Console.WriteLine(SameStarChar("*xa*az"));  // true
+
+
+
+
+        // 25
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
     }
 }
+
