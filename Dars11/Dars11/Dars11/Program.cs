@@ -9,8 +9,6 @@ internal class Program
     static void Main(string[] args)
     {
         
-        
-
 
 
     }
@@ -18,11 +16,26 @@ internal class Program
 
     static void AddEmployee(Employee employee)
     {
-
-        employee.Add(employee);
+        employee.EmployeeId = Guid.NewGuid();
+        employees.Add(employee);
 
     }
-    
+
+    static void RemoveEmployee(Guid employeeId )
+    {
+
+        foreach ( var employee in employees )
+        {
+            if ( employee.EmployeeId == employeeId )
+            {
+                employee.Remove( employee );
+                break;
+            }
+        }
+
+    }
+
+
 
 
 
@@ -30,8 +43,7 @@ internal class Program
     static Employee CreateEmployee()
     {
 
-        Employee employee = new Employee();
-        return employee;
+        return new Employee();
 
     }
 

@@ -7,7 +7,7 @@ namespace Dars11
     public class Employee
     {
 
-        public  Guid GUidId { get; set; }
+        public  Guid EmployeeId { get; set; }
 
         public string  FirstName { get; set; }
 

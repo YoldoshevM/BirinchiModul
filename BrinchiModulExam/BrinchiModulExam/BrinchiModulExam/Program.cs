@@ -176,15 +176,10 @@ internal class Program
             
         }
 
-        //Console.WriteLine(nums[0] + nums[1]);
+        Console.WriteLine(nums[0] + nums[1]);
 
 
-        for ( int i = 0; i < nums.Count ; i++ )
-        {
-
-            Console.WriteLine(nums[0] + nums[1]);
-
-        }
+       
 
 
 
