@@ -40,6 +40,13 @@ internal class Program
         SchoolService schoolService = new SchoolService();
 
 
+        var school1Id = schoolService.AddSchool(school1);
+        var school2Id =schoolService.AddSchool(school2);
+
+
+        schoolService.DeleteSchool(school2Id);
+
+        var schools = schoolService.GetSchools();
     }
 
 
