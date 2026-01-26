@@ -1,10 +1,13 @@
-﻿namespace _2._10_Dars
+﻿internal class Program
 {
-    internal class Program
+    private static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
+
+        
+        
+                
+
+
+
     }
 }
