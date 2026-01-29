@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace _2ModulExam.Dtos;
+
+public class MusicCreateDto
+{
+
+    public string Name { get; set; }
+    public double MB { get; set; }
+    public string AuthorName { get; set; }
+    public string Describtion { get; set; }
+    public int QuentityLikes { get; set; }
+
+
+}
