@@ -1,0 +1,54 @@
+
+
+
+1.
+
+
+	Iterface bu 100% Abstraction , Abstraction esa yoq.
+
+	interfaceni 100% tansi yozilishi shart yani implement qilish shart
+
+
+
+	Abstractioni 3 xil turi bor 
+
+
+	1. (Name) 0% abstraction oddiy ozimiz ishlatadiganlar
+
+
+	2. 50%  yarim abstraction
+
+
+	3. (abstract)   100% abstraction
+
+
+2.
+
+
+
+	Delegat classlarni referensini (manzilini) ozida olib yuradi
+
+	
+	Delegatlarni 3 xil turi bor
+
+	1. Action >> bu faqat void classlarga ishlaydi boshqa tip oladiganlariga emas
+
+	2.     >> bunisi esa qiymat qaytaradiganlariga ishlaydi   misol : int , string.....
+
+	3. Predicate >> bu faqatgina bool ga ishlaydi boshqa hec qaysi tipga ishlamaydi
+
+
+
+
+3.
+
+
+
+string bilan stringBulderni farqi 
+
+string imutable (qiymatini ozgartirib bolmaydi)  , stringBulder mutable (qiymatini ozgartirib boladi)
+
+string stringBuilderga qaraganda hotiradan koproq joy oladi va ikkalasi ham heapda joylashadi
+
+
+

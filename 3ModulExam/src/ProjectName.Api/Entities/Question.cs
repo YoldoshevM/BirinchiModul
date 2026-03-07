@@ -1,0 +1,22 @@
+﻿using ProjectName.Api.Services;
+
+namespace ProjectName.Api.Entities;
+
+public class Question
+{
+
+
+    public Guid QuestionId { get; set; }
+
+    public string Text { get; set; }
+
+    public string VariantA { get; set; }
+
+    public string VariantB { get; set; }
+
+    public string VariantC { get; set; }
+
+    public char Answer { get; set; }
+
+
+}
