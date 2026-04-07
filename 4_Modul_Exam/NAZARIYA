@@ -1,0 +1,44 @@
+
+
+
+
+1.  Agar bizda bitta project bolsa uni biz bitta protsess deb atasak
+    bitta protsessda har doim 1 ta heap va necta sread bolsa shuncha
+    steack boladi. 
+    SOH ni kengaytmasi > small object
+    va agar bizni yaratgan objectlarimizni hajimi 85.000 kb dan kam bolsa 
+    SOH ga tushadi
+
+    va sohda 3 ta gen bor 
+
+    1. gen 0        256kb hajimgaca oziga sigdira oladi
+    2. gen 1        2 mb gaca oziga sigdira oladi
+    3. gen 2        ceksiz 
+
+    agar gen 0 tolsa bizni GC keladidi uni tekshiradi 
+
+    1. mark qiladi 
+    2. delete qiladi 
+    3. compact qiladi 
+
+    agar gen0 da joy qolmasa GC tekshiradi va gen 1 ga otqizadi 
+    va GC gen 0 ni har 2,3 minutda tekshirib turadi 
+    gen 1 ni ozi vaqt qoyib ketadi shunchada kelib tekshiraman deb
+    va GC gen1 ni tekshirganda gen 0 ni ham qoshib tekshiradi 
+
+    gen 2 esa eng kam tekshirilinadigani orasidegilani tekshirme otib ketish ehtimoli bor 
+
+
+
+
+
+
+2. IDisposible bu qaysidur object ocilib keyin yopilmidigan bolsa IDisposible ga kiradi 
+   shuning uchun biz uni qolda ozimiz yopishimizga togri keladi
+   
+
+
+
+3. ref va out bu bi z bu yordamida ozimiz ishlata oladigan funksiya shunga oxshash narsala yaratib lyuboy joyda caqirib ishlatsak boladi 
+   
+    
