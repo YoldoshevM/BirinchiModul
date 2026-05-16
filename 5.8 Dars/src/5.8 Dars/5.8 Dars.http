@@ -1,0 +1,6 @@
+@_5._8_Dars_HostAddress = http://localhost:5038
+
+GET {{_5._8_Dars_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
