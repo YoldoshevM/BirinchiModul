@@ -1,348 +1,279 @@
-﻿using Telegram.Bot;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Telegram.Bot;
+using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-var botClient = new TelegramBotClient("8104930850:AAE4U9CzmBZQrFW-CHOzvbSRqy62pMpz8yA");
-using var cts = new CancellationTokenSource();
-
-// Har bir foydalanuvchi uchun tilni saqlash
-var userLanguages = new Dictionary<long, string>();
-
-botClient.StartReceiving(HandleUpdateAsync, HandleErrorAsync, cancellationToken: cts.Token);
-Console.WriteLine("Bot ishga tushdi...");
-Console.ReadLine();
-
-async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken token)
+class Program
 {
-    // CallbackQuery (inline tugmalar bosilganda)
-    if (update.CallbackQuery is { } callback)
+    // ===== SOZLAMALAR =====
+    // BotFather'dan olgan token shu yerga yoziladi
+    static readonly string BotToken = "8104930850:AAE4U9CzmBZQrFW-CHOzvbSRqy62pMpz8yA";
+
+    static readonly HttpClient httpClient = new HttpClient();
+    // Jamendo API uchun Client ID kerak (https://devportal.jamendo.com da bepul ro'yxatdan o'tib olinadi)
+    static readonly string JamendoClientId = "JAMENDO_CLIENT_ID_BU_YERGA";
+    static TelegramBotClient botClient = null!;
+
+    // Har bir chat uchun oxirgi qidiruv natijalarini saqlaymiz (xabar ID -> shu xabarga tegishli natijalar)
+    static readonly ConcurrentDictionary<string, List<TrackInfo>> SearchCache = new();
+
+    class TrackInfo
     {
-        var callbackChatId = callback.Message.Chat.Id;
-        var data = callback.Data;
+        public string Title { get; set; } = "";
+        public string Artist { get; set; } = "";
+        public string Album { get; set; } = "";
+        public string CoverUrl { get; set; } = "";
+        public string AudioUrl { get; set; } = "";
+        public int Duration { get; set; }
+    }
 
-        // Til tanlash
-        if (data == "lang_uz" || data == "lang_ru" || data == "lang_en")
+    static async Task Main()
+    {
+        botClient = new TelegramBotClient(BotToken);
+
+        using var cts = new CancellationTokenSource();
+
+        var receiverOptions = new ReceiverOptions
         {
-            userLanguages[callbackChatId] = data;
-            await client.AnswerCallbackQuery(callback.Id);
+            AllowedUpdates = Array.Empty<UpdateType>() // hamma update turini qabul qiladi
+        };
 
-            string msg = data == "lang_uz" ? "✅ O'zbek tili tanlandi!" :
-                         data == "lang_ru" ? "✅ Русский язык выбран!" :
-                         "✅ English selected!";
+        botClient.StartReceiving(
+            updateHandler: HandleUpdateAsync,
+            errorHandler: HandleErrorAsync,
+            receiverOptions: receiverOptions,
+            cancellationToken: cts.Token
+        );
 
-            await client.SendMessage(callbackChatId, msg);
-            await ShowMainMenu(client, callbackChatId, data);
-            return;
-        }
+        var me = await botClient.GetMe();
+        Console.WriteLine($"Bot ishga tushdi: @{me.Username}");
+        Console.WriteLine("To'xtatish uchun Enter bosing...");
+        Console.ReadLine();
 
-        // Kater navigatsiyasi
-        if (data == "prev_kater")
+        cts.Cancel();
+    }
+
+    static async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken ct)
+    {
+        try
         {
-            await client.AnswerCallbackQuery(callback.Id, GetText("prev_kater_alert", userLanguages.GetValueOrDefault(callbackChatId, "lang_uz")), true);
-        }
-        else if (data == "next_kater")
-        {
-            // Hozirgi katerni bilish uchun (xabar matniga qarab)
-            var msgText = callback.Message.Text;
-            bool isKater1 = msgText.Contains("Kater #1") || msgText.Contains("Катер #1") || msgText.Contains("Boat #1");
-
-            if (isKater1)
+            // ===== Tugma bosilganda (callback query) =====
+            if (update.CallbackQuery is { } callback)
             {
-                await ShowKater2(client, callbackChatId, userLanguages.GetValueOrDefault(callbackChatId, "lang_uz"));
+                await HandleCallbackAsync(client, callback, ct);
+                return;
+            }
+
+            if (update.Message is not { } message) return;
+            if (message.Text is not { } text) return;
+
+            var chatId = message.Chat.Id;
+
+            // ===== /start komandasi =====
+            if (text.Equals("/start", StringComparison.OrdinalIgnoreCase))
+            {
+                string welcomeText =
+                    "🔥 Assalomu alaykum. Botga xush kelibsiz.\n\n" +
+                    "Bot orqali quyidagilarni yuklab olishingiz mumkin:\n" +
+                    "• Instagram - post va IGTV + audio bilan;\n" +
+                    "• TikTok - suv belgisiz video + audio bilan;\n" +
+                    "• YouTube - videolar va shorts + audio bilan;\n" +
+                    "• Snapchat - suv belgisiz video + audio bilan;\n" +
+                    "• Likee - suv belgisiz video + audio bilan;\n" +
+                    "• Pinterest - suv belgisiz video va rasmlar;\n" +
+                    "• Threads - video va rasmlar + audio bilan;\n\n" +
+                    "Shazam funksiya:\n" +
+                    "• Qo'shiq nomi yoki ijrochi ismi\n" +
+                    "• Qo'shiq matni\n" +
+                    "• Ovozli xabar\n" +
+                    "• Video\n" +
+                    "• Audio\n" +
+                    "• Video xabar\n\n" +
+                    "✅ Hozircha ishlaydigan funksiya: qo'shiq nomini yoki ijrochi ismini yozing, men topib beraman.";
+
+                await client.SendMessage(chatId, welcomeText, cancellationToken: ct);
+                return;
+            }
+
+            // ===== Qolgan har qanday matn — qo'shiq qidiruvi sifatida qaraladi =====
+            await SearchAndSendSongAsync(client, chatId, text, ct);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Update xatosi: {ex.Message}");
+        }
+    }
+
+    static async Task SearchAndSendSongAsync(ITelegramBotClient client, long chatId, string query, CancellationToken ct)
+    {
+        var searchingMsg = await client.SendMessage(chatId, "🔍 Qidirilmoqda...", cancellationToken: ct);
+
+        try
+        {
+            string url = $"https://api.jamendo.com/v3.0/tracks/?client_id={JamendoClientId}&format=json&limit=10&search={Uri.EscapeDataString(query)}&include=musicinfo";
+            var response = await httpClient.GetStringAsync(url, ct);
+
+            using var json = JsonDocument.Parse(response);
+            var root = json.RootElement;
+
+            if (!root.TryGetProperty("results", out var data) || data.GetArrayLength() == 0)
+            {
+                await client.EditMessageText(chatId, searchingMsg.MessageId,
+                    "❌ Hech narsa topilmadi. Bu bot faqat ochiq litsenziyali (Creative Commons) musiqalarni topa oladi — mashhur, label musiqalari bu yerda yo'q. Boshqa nom bilan urinib ko'ring.", cancellationToken: ct);
+                return;
+            }
+
+            // Eng ko'pi bilan 10 ta natijani olamiz
+            var tracks = new List<TrackInfo>();
+            int count = Math.Min(data.GetArrayLength(), 10);
+
+            for (int i = 0; i < count; i++)
+            {
+                var item = data[i];
+                tracks.Add(new TrackInfo
+                {
+                    Title = item.GetProperty("name").GetString() ?? "Noma'lum",
+                    Artist = item.GetProperty("artist_name").GetString() ?? "Noma'lum",
+                    Album = item.TryGetProperty("album_name", out var alb) ? (alb.GetString() ?? "Noma'lum") : "Noma'lum",
+                    CoverUrl = item.TryGetProperty("album_image", out var img) ? (img.GetString() ?? "") : "",
+                    AudioUrl = item.GetProperty("audio").GetString() ?? "",
+                    Duration = item.TryGetProperty("duration", out var dur) ? dur.GetInt32() : 0
+                });
+            }
+
+            // Natijalar ro'yxatini matn sifatida tuzamiz
+            var listText = new System.Text.StringBuilder();
+            listText.AppendLine($"🔎 \"{query}\" bo'yicha topilgan natijalar:\n");
+
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                var t = tracks[i];
+                listText.AppendLine($"{i + 1}. {t.Artist} - {t.Title} ({t.Duration / 60}:{t.Duration % 60:D2})");
+            }
+
+            // Natijalarni keshga saqlaymiz, kalit = chatId_messageId
+            string cacheKey = $"{chatId}_{searchingMsg.MessageId}";
+            SearchCache[cacheKey] = tracks;
+
+            // Inline tugmalarni 5 tadan qilib joylashtiramiz (1-5, 6-10)
+            var buttonRows = new List<InlineKeyboardButton[]>();
+            var row = new List<InlineKeyboardButton>();
+
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                row.Add(InlineKeyboardButton.WithCallbackData((i + 1).ToString(), $"pick_{cacheKey}_{i}"));
+                if (row.Count == 5)
+                {
+                    buttonRows.Add(row.ToArray());
+                    row = new List<InlineKeyboardButton>();
+                }
+            }
+            if (row.Count > 0) buttonRows.Add(row.ToArray());
+
+            var keyboard = new InlineKeyboardMarkup(buttonRows);
+
+            await client.EditMessageText(
+                chatId: chatId,
+                messageId: searchingMsg.MessageId,
+                text: listText.ToString(),
+                replyMarkup: keyboard,
+                cancellationToken: ct
+            );
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Qidiruv xatosi: {ex.Message}");
+            await client.EditMessageText(chatId, searchingMsg.MessageId,
+                "⚠️ Xatolik yuz berdi. Birozdan keyin qayta urinib ko'ring.", cancellationToken: ct);
+        }
+    }
+
+    static async Task HandleCallbackAsync(ITelegramBotClient client, CallbackQuery callback, CancellationToken ct)
+    {
+        try
+        {
+            string? data = callback.Data;
+            if (string.IsNullOrEmpty(data) || !data.StartsWith("pick_"))
+            {
+                await client.AnswerCallbackQuery(callback.Id, cancellationToken: ct);
+                return;
+            }
+
+            // format: pick_{chatId}_{messageId}_{index}
+            var parts = data.Substring("pick_".Length).Split('_');
+            if (parts.Length != 3)
+            {
+                await client.AnswerCallbackQuery(callback.Id, "Xatolik", cancellationToken: ct);
+                return;
+            }
+
+            string cacheKey = $"{parts[0]}_{parts[1]}";
+            int index = int.Parse(parts[2]);
+            long chatId = long.Parse(parts[0]);
+
+            if (!SearchCache.TryGetValue(cacheKey, out var tracks) || index >= tracks.Count)
+            {
+                await client.AnswerCallbackQuery(callback.Id, "Natija eskirgan, qaytadan qidiring", cancellationToken: ct);
+                return;
+            }
+
+            await client.AnswerCallbackQuery(callback.Id, "⏳ Yuklanmoqda...", cancellationToken: ct);
+
+            var track = tracks[index];
+
+            string caption =
+                $"🎵 *{track.Title}*\n" +
+                $"👤 Ijrochi: {track.Artist}\n" +
+                $"💿 Albom: {track.Album}\n" +
+                $"⏱ Davomiyligi: {track.Duration / 60}:{track.Duration % 60:D2}";
+
+            if (!string.IsNullOrEmpty(track.CoverUrl))
+            {
+                await client.SendPhoto(
+                    chatId: chatId,
+                    photo: InputFile.FromUri(track.CoverUrl),
+                    caption: caption,
+                    parseMode: ParseMode.Markdown,
+                    cancellationToken: ct
+                );
             }
             else
             {
-                await client.AnswerCallbackQuery(callback.Id, GetText("no_more_boats", userLanguages.GetValueOrDefault(callbackChatId, "lang_uz")), true);
+                await client.SendMessage(chatId, caption, parseMode: ParseMode.Markdown, cancellationToken: ct);
+            }
+
+            if (!string.IsNullOrEmpty(track.AudioUrl))
+            {
+                await client.SendAudio(
+                    chatId: chatId,
+                    audio: InputFile.FromUri(track.AudioUrl),
+                    title: track.Title,
+                    performer: track.Artist,
+                    cancellationToken: ct
+                );
+            }
+            else
+            {
+                await client.SendMessage(chatId, "⚠️ Bu qo'shiq uchun audio fayl mavjud emas.", cancellationToken: ct);
             }
         }
-        else if (data == "prev_kater2")
+        catch (Exception ex)
         {
-            await ShowKater1(client, callbackChatId, userLanguages.GetValueOrDefault(callbackChatId, "lang_uz"));
+            Console.WriteLine($"Callback xatosi: {ex.Message}");
         }
-        else if (data == "kater1_location")
-        {
-            await client.SendLocation(callbackChatId, 41.2995, 69.2401);
-        }
-        else if (data == "kater2_location")
-        {
-            await client.SendLocation(callbackChatId, 41.3050, 69.2450);
-        }
-        await client.AnswerCallbackQuery(callback.Id);
-        return;
     }
 
-    // Oddiy xabarlar
-    if (update.Message is not { } message)
-        return;
-
-    var chatId = message.Chat.Id;
-    var text = message.Text;
-
-    // /start komandasi
-    if (text == "/start")
+    static Task HandleErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken ct)
     {
-        await ShowLanguageMenu(client, chatId);
-        return;
+        Console.WriteLine($"Bot xatosi: {exception.Message}");
+        return Task.CompletedTask;
     }
-
-    // Tilni tekshirish (hali tanlamagan bo'lsa)
-    if (!userLanguages.ContainsKey(chatId))
-    {
-        await ShowLanguageMenu(client, chatId);
-        return;
-    }
-
-    var lang = userLanguages[chatId];
-
-    // Menyu tugmalari
-    if (text == GetText("btn_boats", lang))
-    {
-        await ShowKater1(client, chatId, lang);
-    }
-    else if (text == GetText("btn_location", lang))
-    {
-        await ShowLocation(client, chatId, lang);
-    }
-    else if (text == GetText("btn_instagram", lang))
-    {
-        await ShowInstagram(client, chatId, lang);
-    }
-    else if (text == GetText("btn_contact", lang))
-    {
-        await ShowContact(client, chatId, lang);
-    }
-    else
-    {
-        await client.SendMessage(chatId, GetText("unknown_command", lang), parseMode: ParseMode.Markdown);
-    }
-}
-
-// Til tanlash menyusi
-async Task ShowLanguageMenu(ITelegramBotClient client, long chatId)
-{
-    var inlineKeyboard = new InlineKeyboardMarkup(new[]
-    {
-        new[] { InlineKeyboardButton.WithCallbackData("🇺🇿 O'zbek tili", "lang_uz") },
-        new[] { InlineKeyboardButton.WithCallbackData("🇷🇺 Русский язык", "lang_ru") },
-        new[] { InlineKeyboardButton.WithCallbackData("🇬🇧 English", "lang_en") }
-    });
-
-    await client.SendMessage(
-        chatId: chatId,
-        text: "🌍 *Tilni tanlang / Выберите язык / Choose language:*",
-        parseMode: ParseMode.Markdown,
-        replyMarkup: inlineKeyboard);
-}
-
-// Asosiy menyu
-async Task ShowMainMenu(ITelegramBotClient client, long chatId, string lang)
-{
-    var replyKeyboard = new ReplyKeyboardMarkup(new[]
-    {
-        new[] { new KeyboardButton(GetText("btn_boats", lang)) },
-        new[] { new KeyboardButton(GetText("btn_location", lang)) },
-        new[] { new KeyboardButton(GetText("btn_instagram", lang)), new KeyboardButton(GetText("btn_contact", lang)) }
-    })
-    {
-        ResizeKeyboard = true,
-        OneTimeKeyboard = false
-    };
-
-    await client.SendMessage(
-        chatId: chatId,
-        text: GetText("welcome", lang),
-        parseMode: ParseMode.Markdown,
-        replyMarkup: replyKeyboard);
-}
-
-// Kater #1
-async Task ShowKater1(ITelegramBotClient client, long chatId, string lang)
-{
-    var inlineButtons = new InlineKeyboardMarkup(new[]
-    {
-        new[] { InlineKeyboardButton.WithCallbackData(GetText("btn_prev", lang), "prev_kater") },
-        new[] { InlineKeyboardButton.WithCallbackData(GetText("btn_next", lang), "next_kater") },
-        new[] { InlineKeyboardButton.WithCallbackData(GetText("btn_show_location", lang), "kater1_location") },
-        new[] { InlineKeyboardButton.WithUrl(GetText("btn_google_maps", lang), "https://maps.google.com/?q=41.2995,69.2401") }
-    });
-
-    await client.SendMessage(
-        chatId: chatId,
-        text: GetText("kater1_text", lang),
-        parseMode: ParseMode.Markdown,
-        replyMarkup: inlineButtons);
-}
-
-// Kater #2 (Oldingi tugmasi bilan)
-async Task ShowKater2(ITelegramBotClient client, long chatId, string lang)
-{
-    var inlineButtons = new InlineKeyboardMarkup(new[]
-    {
-        new[] { InlineKeyboardButton.WithCallbackData(GetText("btn_prev_kater2", lang), "prev_kater2") },
-        new[] { InlineKeyboardButton.WithCallbackData(GetText("btn_next", lang), "next_kater") },
-        new[] { InlineKeyboardButton.WithCallbackData(GetText("btn_show_location", lang), "kater2_location") },
-        new[] { InlineKeyboardButton.WithUrl(GetText("btn_google_maps", lang), "https://maps.google.com/?q=41.3050,69.2450") }
-    });
-
-    await client.SendMessage(
-        chatId: chatId,
-        text: GetText("kater2_text", lang),
-        parseMode: ParseMode.Markdown,
-        replyMarkup: inlineButtons);
-}
-
-// Lokatsiyani ko'rish
-async Task ShowLocation(ITelegramBotClient client, long chatId, string lang)
-{
-    var locationButtons = new InlineKeyboardMarkup(new[]
-    {
-        new[] { InlineKeyboardButton.WithUrl(GetText("btn_google_maps", lang), "https://maps.google.com/?q=41.2995,69.2401") }
-    });
-
-    await client.SendLocation(chatId, 41.2995, 69.2401);
-    await client.SendMessage(chatId, GetText("location_text", lang), parseMode: ParseMode.Markdown, replyMarkup: locationButtons);
-}
-
-// Instagram
-async Task ShowInstagram(ITelegramBotClient client, long chatId, string lang)
-{
-    try
-    {
-        var instaButton = new InlineKeyboardMarkup(InlineKeyboardButton.WithUrl("📱 Instagram", "https://www.instagram.com/__yoldowev/"));
-        await client.SendMessage(chatId, GetText("instagram_text", lang), parseMode: ParseMode.Markdown, replyMarkup: instaButton);
-    }
-    catch (Exception)
-    {
-        await client.SendMessage(chatId, GetText("instagram_text", lang) + "\n\nhttps://www.instagram.com/__yoldowev/", parseMode: ParseMode.Markdown);
-    }
-}
-
-// Aloqa
-async Task ShowContact(ITelegramBotClient client, long chatId, string lang)
-{
-    await client.SendMessage(chatId, GetText("contact_text", lang), parseMode: ParseMode.Markdown);
-}
-
-// MATNLAR (3 tilda)
-string GetText(string key, string lang)
-{
-    var texts = new Dictionary<string, Dictionary<string, string>>
-    {
-        ["welcome"] = new()
-        {
-            ["lang_uz"] = "✨ *Assalomu alaykum! Daryo Katerlari Botiga Xush Kelibsiz!* ✨\n\n🚤 *Katerlar* – narx va joylashuv\n📍 *Lokatsiyani ko'rish* – kater joylashuvi\n📸 *Instagram* – bizning sahifamiz\n📞 *Aloqa* – tez yordam",
-            ["lang_ru"] = "✨ *Добро пожаловать в бот речных катеров!* ✨\n\n🚤 *Катера* – цена и расположение\n📍 *Посмотреть локацию* – расположение катера\n📸 *Instagram* – наша страница\n📞 *Контакты* – быстрая помощь",
-            ["lang_en"] = "✨ *Welcome to the River Boats Bot!* ✨\n\n🚤 *Boats* – price and location\n📍 *View location* – boat location\n📸 *Instagram* – our page\n📞 *Contact* – quick help"
-        },
-        ["btn_boats"] = new()
-        {
-            ["lang_uz"] = "🚤 Katerlarni ko'rish",
-            ["lang_ru"] = "🚤 Посмотреть катера",
-            ["lang_en"] = "🚤 View Boats"
-        },
-        ["btn_location"] = new()
-        {
-            ["lang_uz"] = "📍 Lokatsiyani ko'rish",
-            ["lang_ru"] = "📍 Посмотреть локацию",
-            ["lang_en"] = "📍 View Location"
-        },
-        ["btn_instagram"] = new()
-        {
-            ["lang_uz"] = "📸 Instagram",
-            ["lang_ru"] = "📸 Instagram",
-            ["lang_en"] = "📸 Instagram"
-        },
-        ["btn_contact"] = new()
-        {
-            ["lang_uz"] = "📞 Aloqa",
-            ["lang_ru"] = "📞 Контакты",
-            ["lang_en"] = "📞 Contact"
-        },
-        ["btn_prev"] = new()
-        {
-            ["lang_uz"] = "⬅️ Oldingi",
-            ["lang_ru"] = "⬅️ Назад",
-            ["lang_en"] = "⬅️ Previous"
-        },
-        ["btn_prev_kater2"] = new()
-        {
-            ["lang_uz"] = "⬅️ Oldingi",
-            ["lang_ru"] = "⬅️ Назад",
-            ["lang_en"] = "⬅️ Previous"
-        },
-        ["btn_next"] = new()
-        {
-            ["lang_uz"] = "➡️ Keyingi",
-            ["lang_ru"] = "➡️ Далее",
-            ["lang_en"] = "➡️ Next"
-        },
-        ["btn_show_location"] = new()
-        {
-            ["lang_uz"] = "📍 Lokatsiyani ko'rish",
-            ["lang_ru"] = "📍 Показать локацию",
-            ["lang_en"] = "📍 Show Location"
-        },
-        ["btn_google_maps"] = new()
-        {
-            ["lang_uz"] = "🗺 Google Maps",
-            ["lang_ru"] = "🗺 Google Maps",
-            ["lang_en"] = "🗺 Google Maps"
-        },
-        ["kater1_text"] = new()
-        {
-            ["lang_uz"] = "🚤 *Kater #1 – Zarif*\n👥 10 kishilik\n💰 Narxi: 200 000 so'm/soat\n📍 Joylashuv: Daryo bo'yi, 1-chi to'xtash joyi\n📞 +998 90 123 45 67\n\n⭐️ *Mijozlar bahosi:* 4.8/5\n\n(1/2)",
-            ["lang_ru"] = "🚤 *Катер #1 – Зариф*\n👥 10 мест\n💰 Цена: 200 000 сум/час\n📍 Расположение: Набережная, 1-я остановка\n📞 +998 90 123 45 67\n\n⭐️ *Оценка клиентов:* 4.8/5\n\n(1/2)",
-            ["lang_en"] = "🚤 *Boat #1 – Zarif*\n👥 10 persons\n💰 Price: 200,000 UZS/hour\n📍 Location: Riverside, 1st stop\n📞 +998 90 123 45 67\n\n⭐️ *Customer rating:* 4.8/5\n\n(1/2)"
-        },
-        ["kater2_text"] = new()
-        {
-            ["lang_uz"] = "🚤 *Kater #2 – Layner*\n👥 6 kishilik\n💰 Narxi: 150 000 so'm/soat\n📍 Joylashuv: Daryo bo'yi, 2-chi to'xtash joyi\n📞 +998 90 123 45 68\n\n(2/2)",
-            ["lang_ru"] = "🚤 *Катер #2 – Лайнер*\n👥 6 мест\n💰 Цена: 150 000 сум/час\n📍 Расположение: Набережная, 2-я остановка\n📞 +998 90 123 45 68\n\n(2/2)",
-            ["lang_en"] = "🚤 *Boat #2 – Layner*\n👥 6 persons\n💰 Price: 150,000 UZS/hour\n📍 Location: Riverside, 2nd stop\n📞 +998 90 123 45 68\n\n(2/2)"
-        },
-        ["location_text"] = new()
-        {
-            ["lang_uz"] = "📍 *Daryo katerlari joylashuvi*\nManzil: Daryo bo'yi, 1-chi to'xtash joyi",
-            ["lang_ru"] = "📍 *Расположение речных катеров*\nАдрес: Набережная, 1-я остановка",
-            ["lang_en"] = "📍 *River boats location*\nAddress: Riverside, 1st stop"
-        },
-        ["instagram_text"] = new()
-        {
-            ["lang_uz"] = "✨ *Bizning Instagram sahifamiz:*\n👇 Quyidagi tugma orqali o'ting",
-            ["lang_ru"] = "✨ *Наша страница в Instagram:*\n👇 Перейдите по кнопке ниже",
-            ["lang_en"] = "✨ *Our Instagram page:*\n👇 Click the button below"
-        },
-        ["contact_text"] = new()
-        {
-            ["lang_uz"] = "📞 *Biz bilan bog'lanish:*\n\n👨‍💼 *Admin:* +998 90 123 45 67\n⏰ *Ish vaqti:* 09:00 – 22:00\n📍 *Manzil:* Daryo bo'yi, 1-chi to'xtash joyi",
-            ["lang_ru"] = "📞 *Свяжитесь с нами:*\n\n👨‍💼 *Админ:* +998 90 123 45 67\n⏰ *Режим работы:* 09:00 – 22:00\n📍 *Адрес:* Набережная, 1-я остановка",
-            ["lang_en"] = "📞 *Contact us:*\n\n👨‍💼 *Admin:* +998 90 123 45 67\n⏰ *Working hours:* 09:00 – 22:00\n📍 *Address:* Riverside, 1st stop"
-        },
-        ["unknown_command"] = new()
-        {
-            ["lang_uz"] = "❓ *Tushunarsiz buyruq.* /start bosing",
-            ["lang_ru"] = "❓ *Неизвестная команда.* Нажмите /start",
-            ["lang_en"] = "❓ *Unknown command.* Press /start"
-        },
-        ["prev_kater_alert"] = new()
-        {
-            ["lang_uz"] = "Bu birinchi kater",
-            ["lang_ru"] = "Это первый катер",
-            ["lang_en"] = "This is the first boat"
-        },
-        ["no_more_boats"] = new()
-        {
-            ["lang_uz"] = "❌ Boshqa kater mavjud emas",
-            ["lang_ru"] = "❌ Больше нет катеров",
-            ["lang_en"] = "❌ No more boats available"
-        }
-    };
-
-    return texts.GetValueOrDefault(key, new Dictionary<string, string>()).GetValueOrDefault(lang, "❓ Xato");
-}
-
-async Task HandleErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken token)
-{
-    Console.WriteLine($"Xatolik: {exception.Message}");
 }
