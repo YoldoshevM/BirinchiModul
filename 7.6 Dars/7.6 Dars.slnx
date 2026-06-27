@@ -1,1 +1,5 @@
-<Solution />
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/7.6 Dars/7.6 Dars.csproj" />
+  </Folder>
+</Solution>
